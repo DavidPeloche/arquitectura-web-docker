@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -9,26 +9,27 @@ services:
       - ./frontend:/usr/share/nginx/html:ro
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     ports:
       - "5000:5000"
     volumes:
       - ./backend:/app
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
     depends_on:
       - db
 
   db:
     image: postgres:15
+    restart: always
     environment:
-      POSTGRES_USER: usuario
+      POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: midb
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: mydatabase
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db-data:/var/lib/postgresql/data
 
 volumes:
-  db_data:
+  db-data:
 
